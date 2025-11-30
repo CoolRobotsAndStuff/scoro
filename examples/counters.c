@@ -1,5 +1,9 @@
 #include "../scoro.h"
-#include <unistd.h>
+#ifdef _WIN32
+#   include <windows.h>
+#elif defined(__unix__)
+#   include <unistd.h>
+#endif
 
 void counter(Cr* c, int id) {
     cr_begin(c);
@@ -19,6 +23,10 @@ int main() {
         counter(&thread1, 1);
         counter(&thread2, 2);
         puts("tick");
-        usleep(1000000);
+        #ifdef _WIN32
+        Sleep(1000);
+        #elif defined(__unix__)
+        sleep(1);
+        #endif
     }
 }
