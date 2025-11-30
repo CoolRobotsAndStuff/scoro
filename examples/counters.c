@@ -1,9 +1,10 @@
-#include "../scoro.h"
 #ifdef _WIN32
 #   include <windows.h>
 #elif defined(__unix__)
 #   include <unistd.h>
 #endif
+#include <stdio.h>
+#include "../scoro.h"
 
 void counter(Cr* c, int id) {
     cr_begin(c);

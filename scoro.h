@@ -1,6 +1,5 @@
 #ifndef SCORO_H_
 #define SCORO_H_
-#include <stdio.h>
 #include <string.h>
 #include <setjmp.h>
 
@@ -17,7 +16,6 @@ typedef struct {
   int isset;
   int status;
   unsigned char stack[CR_STACK_SIZE];
-  char* last_saved_adress;
 } Cr;
 
 #define cr_begin(cr)                          \
@@ -25,7 +23,7 @@ typedef struct {
   do {                                        \
   do {                                        \
     if ((cr)->isset) {                        \
-      memcpy((cr)->last_saved_adress, &((cr)->stack[0]), CR_STACK_SIZE);\
+      memcpy(((char*)&__begin)-CR_STACK_SIZE, &((cr)->stack[0]), CR_STACK_SIZE);\
       longjmp((cr)->env, 0);                  \
     }                                         \
   } while (0)
@@ -33,8 +31,7 @@ typedef struct {
   do {                                        \
     (cr)->isset = 1;                          \
     (cr)->status = (stat);                    \
-    (cr)->last_saved_adress =  ((char*)&__begin)-CR_STACK_SIZE; \
-    memcpy(&((cr)->stack[0]), (cr)->last_saved_adress, CR_STACK_SIZE);  \
+    memcpy(&((cr)->stack[0]), ((char*)&__begin)-CR_STACK_SIZE, CR_STACK_SIZE);  \
     for (int i = 0; i < CR_STACK_SIZE; ++i); \
     setjmp((cr)->env);                        \
   } while (0)
