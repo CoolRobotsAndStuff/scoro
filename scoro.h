@@ -21,7 +21,7 @@ typedef struct {
 } Cr;
 
 #define cr_begin(cr)                          \
-  volatile Cr __begin;                        \
+  volatile Cr __begin = {0};                  \
   do {                                        \
   do {                                        \
     if ((cr)->isset) {                        \
